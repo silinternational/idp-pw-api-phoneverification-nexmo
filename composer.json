@@ -13,5 +13,13 @@
     "php": ">=5.4.0",
     "silinternational/idp-pw-api-common": "dev-master",
     "fillup/nexmo": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sil\\IdpPw\\PhoneVerification\\Nexmo\\": "src/"
+    }
   }
 }
