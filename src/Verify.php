@@ -6,6 +6,11 @@ use Nexmo\Verify as NexmoClient;
 use Sil\IdpPw\Common\PhoneVerification\PhoneVerificationInterface;
 use yii\base\Component;
 
+/**
+ * Class Verify
+ * @package Sil\IdpPw\PhoneVerification\Nexmo
+ * @link https://docs.nexmo.com/api-ref/verify Nexmo Verify API documentation
+ */
 class Verify extends Component implements PhoneVerificationInterface
 {
 

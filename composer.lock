@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fa61728c42bb8615c5d5e4b8a150ecad",
-    "content-hash": "3db94f352d99d0895add4fddacd06cb2",
+    "hash": "c3da8ca441111992aec41ae9e7056f49",
+    "content-hash": "e9f57b442cda165793f48ca800c81fd1",
     "packages": [
         {
             "name": "bower-asset/jquery",
@@ -271,7 +271,7 @@
         },
         {
             "name": "fillup/nexmo",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fillup/nexmo.git",
@@ -1881,8 +1881,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "silinternational/idp-pw-api-common": 20,
-        "fillup/nexmo": 20
+        "silinternational/idp-pw-api-common": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
