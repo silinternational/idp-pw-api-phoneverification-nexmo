@@ -85,11 +85,11 @@ class Verify extends Component implements PhoneVerificationInterface
      * Initiate phone verification
      * @param string $phoneNumber The mobile or landline phone number to verify. Unless you are setting country
      *                            explicitly, this number must be in E.164 format. For example, 4478342080934.
-     * @param string|null $code
+     * @param string $code This is ignored in Nexmo Verify implementation
      * @return string The verification code used, or another identifier to be used with self::verify() later
      * @throws \Exception
      */
-    public function send($phoneNumber, $code = null)
+    public function send($phoneNumber, $code)
     {
         $client = new NexmoClient([
             'api_key' => $this->apiKey,
