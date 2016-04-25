@@ -59,6 +59,7 @@ class Sms extends Component implements PhoneVerificationInterface
 
         try {
             $results = $client->send($requestData);
+            $results = $results['messages'][0];
             if ((string)$results['status'] == '0') {
                 return $code;
             }
