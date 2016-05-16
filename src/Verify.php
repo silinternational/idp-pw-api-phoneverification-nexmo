@@ -128,7 +128,7 @@ class Verify extends Component implements PhoneVerificationInterface
 
         try {
             $results = $client->verify($requestData);
-            if ((string)$results['status'] == '0') {
+            if ((string)$results['status'] === '0') {
                 if (isset($results['request_id']) && ! empty($results['request_id'])) {
                     return $results['request_id'];
                 }
