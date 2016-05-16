@@ -97,7 +97,7 @@ class Sms extends Component implements PhoneVerificationInterface
      */
     public function verify($resetCode, $userProvided)
     {
-        return $resetCode == $userProvided;
+        return $resetCode === $userProvided;
     }
 
 }
