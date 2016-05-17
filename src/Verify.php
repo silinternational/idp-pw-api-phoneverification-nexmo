@@ -91,6 +91,10 @@ class Verify extends Component implements PhoneVerificationInterface
      */
     public function send($phoneNumber, $code)
     {
+        if (empty($code)) {
+            throw new \Exception('Code cannot be empty', 1463510951);
+        }
+
         $client = new NexmoClient([
             'api_key' => $this->apiKey,
             'api_secret' => $this->apiSecret,
@@ -167,6 +171,10 @@ class Verify extends Component implements PhoneVerificationInterface
      */
     public function verify($resetCode, $userProvided)
     {
+        if (empty($resetCode) || empty($userProvided)) {
+            throw new \Exception('Reset code and user provided code cannot be empty', 1463510955);
+        }
+
         $client = $this->getClient();
 
         try {
