@@ -4,83 +4,14 @@ namespace Sil\IdpPw\PhoneVerification\Nexmo;
 use GuzzleHttp\Exception\RequestException;
 use Nexmo\Verify as NexmoClient;
 use Sil\IdpPw\Common\PhoneVerification\PhoneVerificationInterface;
-use yii\base\Component;
 
 /**
  * Class Verify
  * @package Sil\IdpPw\PhoneVerification\Nexmo
  * @link https://docs.nexmo.com/api-ref/verify Nexmo Verify API documentation
  */
-class Verify extends Component implements PhoneVerificationInterface
+class Verify extends Base implements PhoneVerificationInterface
 {
-
-    /**
-     * Required
-     * @var string
-     */
-    public $apiKey;
-
-    /**
-     * Required
-     * @var string
-     */
-    public $apiSecret;
-
-    /**
-     * Required - The name of the company or App you are using Verify for. This 18 character alphanumeric
-     * string is used in the body of Verify message. For example: "Your brand PIN is ..".
-     * @var string
-     */
-    public $brand;
-
-    /**
-     * Optional - The length of the PIN. Possible values are 6 or 4 characters. The default value is 4.
-     * @var int [default=4]
-     */
-    public $codeLength = 4;
-
-    /**
-     * Optional - If do not set number in international format or you are not sure if number is correctly
-     * formatted, set country with the two-character country code. For example, GB, US. Verify
-     * works out the international phone number for you.
-     * @var string
-     * @link https://docs.nexmo.com/api-ref/voice-api/supported-languages
-     */
-    public $country;
-
-    /**
-     * Optional - By default, TTS are generated in the locale that matches number. For example,
-     * the TTS for a 33* number is sent in French. Use this parameter to explicitly control the
-     * language, accent and gender used for the Verify request. The default language is en-us.
-     * @var string
-     */
-    public $language;
-
-    /**
-     * Optional - The PIN validity time from generation. This is an integer value between 30 and 3600
-     * seconds. The default is 300 seconds. When specified together, pin_expiry must be an integer
-     * multiple of next_event_wait. Otherwise, pin_expiry is set to next_event_wait.
-     * @var int
-     */
-    public $pinExpiry;
-
-    /**
-     * Optional - An integer value between 60 and 900 seconds inclusive that specifies the wait
-     * time between attempts to deliver the PIN. Verify calculates the default value based on the
-     * average time taken by users to complete verification.
-     * @var int
-     */
-    public $nextEventWait;
-
-    /**
-     * Optional - An 11 character alphanumeric string to specify the SenderID for SMS sent by Verify.
-     * Depending on the destination of the phone number you are applying, restrictions may apply.
-     * By default, sender_id is VERIFY.
-     * @var string
-     */
-    public $senderId;
-
-
     /**
      * Initiate phone verification
      * @param string $phoneNumber The mobile or landline phone number to verify. Unless you are setting country
@@ -95,10 +26,7 @@ class Verify extends Component implements PhoneVerificationInterface
             throw new \Exception('Code cannot be empty', 1463510951);
         }
 
-        $client = new NexmoClient([
-            'api_key' => $this->apiKey,
-            'api_secret' => $this->apiSecret,
-        ]);
+        $client = $this->getClient();
 
         /*
          * Parameters for API call
@@ -148,7 +76,8 @@ class Verify extends Component implements PhoneVerificationInterface
                 $body = $response->json();
                 throw new \Exception(
                     sprintf('Error: [%s] %s', $body['status'], $body['error_text']),
-                    1460146801
+                    1460146801,
+                    $e
                 );
             }
             throw $e;
@@ -207,8 +136,20 @@ class Verify extends Component implements PhoneVerificationInterface
 
     }
 
+    /**
+     * @return \Nexmo\Verify
+     * @throws \Exception
+     */
     private function getClient()
     {
+        if (empty($this->apiKey)) {
+            throw new \Exception('API Key required for Nexmo', 1469715138);
+        } elseif (empty($this->apiSecret)) {
+            throw new \Exception('API Secret required for Nexmo', 1469715139);
+        } elseif (empty($this->brand)) {
+            throw new \Exception('Brand required for Nexmo', 1469715140);
+        }
+
         return new NexmoClient([
             'api_key' => $this->apiKey,
             'api_secret' => $this->apiSecret,

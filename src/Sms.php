@@ -4,33 +4,14 @@ namespace Sil\IdpPw\PhoneVerification\Nexmo;
 use GuzzleHttp\Exception\RequestException;
 use Nexmo\Sms as NexmoClient;
 use Sil\IdpPw\Common\PhoneVerification\PhoneVerificationInterface;
-use yii\base\Component;
 
 /**
- * Class Verify
+ * Class SMS
  * @package Sil\IdpPw\PhoneVerification\Nexmo
- * @link https://docs.nexmo.com/api-ref/verify Nexmo Verify API documentation
+ * @link https://docs.nexmo.com/messaging/sms-api/api-reference Nexmo SMS API documentation
  */
-class Sms extends Component implements PhoneVerificationInterface
+class Sms extends Base implements PhoneVerificationInterface
 {
-
-    /**
-     * Required
-     * @var string
-     */
-    public $apiKey;
-
-    /**
-     * Required
-     * @var string
-     */
-    public $apiSecret;
-
-    /**
-     * Required - The Nexmo phone number to send SMS from
-     * @var string
-     */
-    public $from;
 
     /**
      * Initiate phone verification
@@ -46,10 +27,7 @@ class Sms extends Component implements PhoneVerificationInterface
             throw new \Exception('Code cannot be empty', 1463510967);
         }
 
-        $client = new NexmoClient([
-            'api_key' => $this->apiKey,
-            'api_secret' => $this->apiSecret,
-        ]);
+        $client = $this->getClient();
 
         /*
          * Parameters for API call
@@ -106,6 +84,26 @@ class Sms extends Component implements PhoneVerificationInterface
         }
 
         return $resetCode === $userProvided;
+    }
+
+    /**
+     * @return \Nexmo\Sms
+     * @throws \Exception
+     */
+    private function getClient()
+    {
+        if (empty($this->apiKey)) {
+            throw new \Exception('API Key required for Nexmo', 1469715093);
+        } elseif (empty($this->apiSecret)) {
+            throw new \Exception('API Secret required for Nexmo', 1469715094);
+        } elseif (empty($this->from)) {
+            throw new \Exception('From is required for Nexmo', 1469715095);
+        }
+
+        return new NexmoClient([
+            'api_key' => $this->apiKey,
+            'api_secret' => $this->apiSecret,
+        ]);
     }
 
 }
