@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c3da8ca441111992aec41ae9e7056f49",
-    "content-hash": "e9f57b442cda165793f48ca800c81fd1",
+    "hash": "64a719e4a0b0d98d4ecb096ee177dc7a",
+    "content-hash": "bf6010fd8cb2fed752b973ddec200854",
     "packages": [
         {
             "name": "bower-asset/jquery",
@@ -271,16 +271,16 @@
         },
         {
             "name": "fillup/nexmo",
-            "version": "1.0.0",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fillup/nexmo.git",
-                "reference": "c8c51bb54789a7d0a23859262a86c2b473f33cd5"
+                "reference": "0efe7d21d8d85a4a9c327a068a6b1fbdfff01ba3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fillup/nexmo/zipball/c8c51bb54789a7d0a23859262a86c2b473f33cd5",
-                "reference": "c8c51bb54789a7d0a23859262a86c2b473f33cd5",
+                "url": "https://api.github.com/repos/fillup/nexmo/zipball/0efe7d21d8d85a4a9c327a068a6b1fbdfff01ba3",
+                "reference": "0efe7d21d8d85a4a9c327a068a6b1fbdfff01ba3",
                 "shasum": ""
             },
             "require": {
@@ -306,7 +306,7 @@
                 }
             ],
             "description": "Nexmo API client built with Guzzle Web Service descriptions",
-            "time": "2016-03-29 18:59:47"
+            "time": "2016-07-28 17:46:31"
         },
         {
             "name": "guzzlehttp/command",
@@ -753,17 +753,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silinternational/idp-pw-api-common.git",
-                "reference": "f5c0b1a7e0d0b1131701a7dfc5370112e155f7b9"
+                "reference": "554d80e313be3bd9e4fc93021b586ffec6f7749d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silinternational/idp-pw-api-common/zipball/f5c0b1a7e0d0b1131701a7dfc5370112e155f7b9",
-                "reference": "f5c0b1a7e0d0b1131701a7dfc5370112e155f7b9",
+                "url": "https://api.github.com/repos/silinternational/idp-pw-api-common/zipball/554d80e313be3bd9e4fc93021b586ffec6f7749d",
+                "reference": "554d80e313be3bd9e4fc93021b586ffec6f7749d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
-                "yiisoft/yii2": "2.0.6"
+                "yiisoft/yii2": "*"
             },
             "require-dev": {
                 "phpunit/phpunit": "5.2.9"
@@ -785,7 +785,7 @@
                 }
             ],
             "description": "Common interfaces and bases classes for integration components.",
-            "time": "2016-04-11 15:21:19"
+            "time": "2016-07-28 17:38:06"
         },
         {
             "name": "yiisoft/yii2",

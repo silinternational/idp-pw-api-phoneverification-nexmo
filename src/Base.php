@@ -1,6 +1,8 @@
 <?php
 namespace Sil\IdpPw\PhoneVerification\Nexmo;
 
+use GuzzleHttp\Exception\RequestException;
+use Nexmo\Insight;
 use yii\base\Component;
 
 class Base extends Component
@@ -88,4 +90,31 @@ class Base extends Component
      * @var string
      */
     public $senderId;
+
+    public function format($phoneNumber)
+    {
+        $client = new Insight([
+            'api_key' => $this->apiKey,
+            'api_secret' => $this->apiSecret,
+        ]);
+
+        try {
+            $insights = $client->basic([
+                'number' => $phoneNumber,
+            ]);
+
+            if ($insights['status'] === 0) {
+                return sprintf('%s %s', $insights['country_prefix'], $insights['national_format_number']);
+            } else {
+                throw new \Exception(
+                    'Unable to verify phone number for formatting, please check the number and try again.' .
+                    'Error code: ' . $insights['status'] . ', Message: ' . $insights['status_message'],
+                    1469727752
+                );
+            }
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

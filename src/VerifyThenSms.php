@@ -1,6 +1,7 @@
 <?php
 namespace Sil\IdpPw\PhoneVerification\Nexmo;
 
+use GuzzleHttp\Exception\RequestException;
 use Sil\IdpPw\Common\PhoneVerification\PhoneVerificationInterface;
 
 /**
@@ -45,12 +46,21 @@ class VerifyThenSms extends Base implements PhoneVerificationInterface
              * Verify failed, log it and, try using SMS
              */
             $previous = $e->getPrevious();
-            if ($previous) {
-                $message = $previous->getMessage();
-                $code = $previous->getCode();
+            if ($previous && $previous instanceof RequestException) {
+                /** @var $e RequestException */
+                if($e->hasResponse()) {
+                    $response = $e->getResponse();
+                    $body = $response->json();
+                    $message = $body['error_text'];
+                    $errorCode = $body['status'];
+                } else {
+                    $message = $e->getMessage();
+                    $errorCode = $e->getCode();
+                }
             } else {
+                /** @var $e \Exception */
                 $message = $e->getMessage();
-                $code = $e->getCode();
+                $errorCode = $e->getCode();
             }
 
             \Yii::error([
@@ -58,7 +68,7 @@ class VerifyThenSms extends Base implements PhoneVerificationInterface
                 'type' => 'verify',
                 'status' => 'error',
                 'error' => $message,
-                'code' => $code,
+                'code' => $errorCode,
             ]);
         }
 
