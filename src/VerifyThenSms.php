@@ -3,6 +3,8 @@ namespace Sil\IdpPw\PhoneVerification\Nexmo;
 
 use GuzzleHttp\Exception\RequestException;
 use Sil\IdpPw\Common\PhoneVerification\PhoneVerificationInterface;
+use yii\web\BadRequestHttpException;
+use yii\web\ServerErrorHttpException;
 
 /**
  * Class Verify
@@ -42,38 +44,45 @@ class VerifyThenSms extends Base implements PhoneVerificationInterface
              */
             return $verify->send($phoneNumber, $code);
         } catch (\Exception $e) {
-            /*
-             * Verify failed, log it and, try using SMS
-             */
-            $previous = $e->getPrevious();
-            if ($previous && $previous instanceof RequestException) {
-                /** @var $e RequestException */
-                if($e->hasResponse()) {
-                    $response = $e->getResponse();
-                    $body = $response->json();
-                    $message = $body['error_text'];
-                    $errorCode = $body['status'];
-                } else {
-                    $message = $e->getMessage();
-                    $errorCode = $e->getCode();
+
+            if ($e instanceof NexmoException) {
+                /*
+                 * If concurrent request, throw exception letting users know to check phone
+                 */
+                if (strval($e->getCode()) === '10') {
+                    throw new BadRequestHttpException(
+                        'Verification currently in progress, please check your phone.',
+                        1470317050
+                    );
                 }
-            } else {
-                /** @var $e \Exception */
-                $message = $e->getMessage();
-                $errorCode = $e->getCode();
             }
 
             \Yii::error([
                 'action' => 'phone verification',
                 'type' => 'verify',
                 'status' => 'error',
-                'error' => $message,
-                'code' => $errorCode,
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
             ]);
         }
 
-        $sms = $this->getSmsClient();
+        /*
+         * Don't send Verify ID as verification code
+         */
+        if (strlen($code) !== $this->codeLength) {
+            \Yii::error([
+                'action' => 'verify phone',
+                'status' => 'error',
+                'error' => 'Call to Nexmo Verify failed, $code is a Verify ID so not falling back to SMS',
+                'code' => $code,
+            ]);
+            throw new ServerErrorHttpException(
+                'There was an internal problem verifying your number. Please wait a minute and try again.',
+                1470317786
+            );
+        }
 
+        $sms = $this->getSmsClient();
         try {
             return $sms->send($phoneNumber, $code);
         } catch (\Exception $e) {
@@ -82,7 +91,6 @@ class VerifyThenSms extends Base implements PhoneVerificationInterface
              */
             throw $e;
         }
-
     }
 
     /**

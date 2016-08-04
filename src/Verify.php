@@ -66,21 +66,7 @@ class Verify extends Base implements PhoneVerificationInterface
                 }
             }
 
-            throw new \Exception(
-                sprintf('Error: [%s]  %s', $results['status'], $results['error_text']),
-                1460146281
-            );
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-                $body = $response->json();
-                throw new \Exception(
-                    sprintf('Error: [%s] %s', $body['status'], $body['error_text']),
-                    1460146801,
-                    $e
-                );
-            }
-            throw $e;
+            throw new NexmoException($results['error_text'], $results['status']);
         } catch (\Exception $e) {
             throw $e;
         }
