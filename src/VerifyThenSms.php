@@ -57,13 +57,21 @@ class VerifyThenSms extends Base implements PhoneVerificationInterface
                 }
             }
 
-            \Yii::error([
-                'action' => 'phone verification',
-                'type' => 'verify',
-                'status' => 'error',
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-            ]);
+            /*
+             * Don't log error if Nexmo code in list:
+             * 15 - The destination number is not in a supported network
+             * 16 - The code inserted does not match the expected value
+             * 17 - A wrong code was provided too many times
+             */
+            if ( ! in_array($e->getCode(), [15, 16, 17])) {
+                \Yii::error([
+                    'action' => 'phone verification',
+                    'type' => 'verify',
+                    'status' => 'error',
+                    'error' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                ]);
+            }
         }
 
         /*
