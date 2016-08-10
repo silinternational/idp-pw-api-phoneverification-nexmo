@@ -3,6 +3,7 @@ namespace Sil\IdpPw\PhoneVerification\Nexmo;
 
 use GuzzleHttp\Exception\RequestException;
 use Nexmo\Verify as NexmoClient;
+use Sil\IdpPw\Common\PhoneVerification\NotMatchException;
 use Sil\IdpPw\Common\PhoneVerification\PhoneVerificationInterface;
 
 /**
@@ -97,25 +98,30 @@ class Verify extends Base implements PhoneVerificationInterface
                 'request_id' => $resetCode,
                 'code' => $userProvided,
             ]);
-            if ((string)$results['status'] == '0') {
+
+            $resultCode = (string)$results['status'];
+
+            /*
+             * Check success
+             */
+            if ($resultCode == '0') {
                 return true;
             }
 
-            throw new \Exception(
-                sprintf('Error: [%s]  %s', $results['status'], $results['error_text']),
-                1460146282
-            );
-
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-                $body = $response->json();
-                throw new \Exception(
-                    sprintf('Error: [%s] %s', $body['status'], $body['error_text']),
-                    1460146802
-                );
+            /*
+             * Check for invalid code and throw NotMatchException
+             * 16 - The code inserted does not match the expected value
+             * 17 - A wrong code was provided too many times
+             */
+            if (in_array($resultCode, ['16', '17'])) {
+                throw new NotMatchException();
             }
-            throw $e;
+
+            /*
+             * Throw NexmoException
+             */
+            throw new NexmoException($results['error_text'], $results['status']);
+
         } catch (\Exception $e) {
             throw $e;
         }

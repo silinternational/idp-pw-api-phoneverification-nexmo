@@ -3,6 +3,7 @@ namespace Sil\IdpPw\PhoneVerification\Nexmo;
 
 use GuzzleHttp\Exception\RequestException;
 use Nexmo\Sms as NexmoClient;
+use Sil\IdpPw\Common\PhoneVerification\NotMatchException;
 use Sil\IdpPw\Common\PhoneVerification\PhoneVerificationInterface;
 
 /**
@@ -83,7 +84,11 @@ class Sms extends Base implements PhoneVerificationInterface
             throw new \Exception('Reset code and user provided code cannot be empty', 1463510988);
         }
 
-        return $resetCode === $userProvided;
+        if ($resetCode === $userProvided) {
+            return true;
+        }
+
+        throw new NotMatchException();
     }
 
     /**

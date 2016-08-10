@@ -63,7 +63,7 @@ class VerifyThenSms extends Base implements PhoneVerificationInterface
              * 16 - The code inserted does not match the expected value
              * 17 - A wrong code was provided too many times
              */
-            if ( ! in_array($e->getCode(), [15, 16, 17])) {
+            if ( ! in_array(strval($e->getCode()), ['15', '16', '17'])) {
                 \Yii::error([
                     'action' => 'phone verification',
                     'type' => 'verify',
