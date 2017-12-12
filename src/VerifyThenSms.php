@@ -55,6 +55,26 @@ class VerifyThenSms extends Base implements PhoneVerificationInterface
                         1470317050
                     );
                 }
+                
+                /*
+                 * If Nexmo complains about the format of the number, log it so
+                 * we can see what the format is.
+                 */
+                if (strval($e->getCode()) === '3') {
+                    \Yii::error([
+                        'action' => 'phone verification',
+                        'number' => $phoneNumber,
+                        'type' => 'verify',
+                        'status' => 'error',
+                        'error' => $e->getMessage(),
+                        'code' => $e->getCode(),
+                    ]);
+                    throw new BadRequestHttpException(
+                        'We had trouble understanding that phone number. '
+                        . 'Would you mind retyping it, perhaps only using numbers?',
+                        1513088476
+                    );
+                }
             }
 
             /*
